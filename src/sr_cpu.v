@@ -193,6 +193,7 @@ module sr_control
 
             { `RVF7_ANY,  `RVF3_BEQ,  `RVOP_BEQ  } : begin branch = 1'b1; condZero = 1'b1; aluControl = `ALU_SUB; end
             { `RVF7_ANY,  `RVF3_BNE,  `RVOP_BNE  } : begin branch = 1'b1; aluControl = `ALU_SUB; end
+            { `RVF7_ANY,  `RVF3_XORI, `RVOP_XORI } : begin regWrite = 1'b1; aluSrc = 1'b1; aluControl = `ALU_XORI; end
         endcase
     end
 endmodule
@@ -212,7 +213,8 @@ module sr_alu
             `ALU_OR   : result = srcA | srcB;
             `ALU_SRL  : result = srcA >> srcB [4:0];
             `ALU_SLTU : result = (srcA < srcB) ? 1 : 0;
-            `ALU_SUB : result = srcA - srcB;
+            `ALU_SUB  : result = srcA - srcB;
+            `ALU_XORI : result = srcA ^ srcB;
         endcase
     end
 
