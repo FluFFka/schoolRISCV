@@ -24,6 +24,8 @@ module sr_cpu
     wire        pcSrc;
     wire        regWrite;
     wire        aluSrc;
+    wire        aluSrcUimm;
+    wire        aluSrcPC;
     wire        wdSrc;
     wire  [2:0] aluControl;
 
@@ -86,11 +88,12 @@ module sr_cpu
     assign regData = (regAddr != 0) ? rd0 : pc;
 
     //alu
-    wire [31:0] srcB = aluSrc ? immI : rd2;
+    wire [31:0] srcA = aluSrcPC ? pc : rd1;
+    wire [31:0] srcB = aluSrcUimm ? immU : (aluSrc ? immI : rd2);
     wire [31:0] aluResult;
 
     sr_alu alu (
-        .srcA       ( rd1          ),
+        .srcA       ( srcA         ),
         .srcB       ( srcB         ),
         .oper       ( aluControl   ),
         .zero       ( aluZero      ),
@@ -108,6 +111,8 @@ module sr_cpu
         .pcSrc      ( pcSrc        ),
         .regWrite   ( regWrite     ),
         .aluSrc     ( aluSrc       ),
+        .aluSrcUimm ( aluSrcUimm   ),
+        .aluSrcPC   ( aluSrcPC     ),
         .wdSrc      ( wdSrc        ),
         .aluControl ( aluControl   ) 
     );
@@ -166,6 +171,8 @@ module sr_control
     output           pcSrc, 
     output reg       regWrite, 
     output reg       aluSrc,
+    output reg       aluSrcUimm,
+    output reg       aluSrcPC,
     output reg       wdSrc,
     output reg [2:0] aluControl
 );
@@ -178,6 +185,9 @@ module sr_control
         condZero    = 1'b0;
         regWrite    = 1'b0;
         aluSrc      = 1'b0;
+        aluSrcUimm  = 1'b0;
+        aluSrcPC    = 1'b0;
+
         wdSrc       = 1'b0;
         aluControl  = `ALU_ADD;
 
@@ -191,6 +201,7 @@ module sr_control
 
             { `RVF7_ANY,  `RVF3_ADDI, `RVOP_ADDI } : begin regWrite = 1'b1; aluSrc = 1'b1; aluControl = `ALU_ADD; end
             { `RVF7_ANY,  `RVF3_ANY,  `RVOP_LUI  } : begin regWrite = 1'b1; wdSrc  = 1'b1; end
+            { `RVF7_ANY,  `RVF3_ANY,  `RVOP_AUIPC} : begin regWrite = 1'b1; aluSrcUimm = 1'b1; aluSrcPC = 1'b1; aluControl = `ALU_ADD; end
 
             { `RVF7_ANY,  `RVF3_BEQ,  `RVOP_BEQ  } : begin branch = 1'b1; condZero = 1'b1; aluControl = `ALU_SUB; end
             { `RVF7_ANY,  `RVF3_BNE,  `RVOP_BNE  } : begin branch = 1'b1; aluControl = `ALU_SUB; end
