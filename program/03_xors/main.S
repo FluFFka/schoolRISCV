@@ -1,8 +1,3 @@
-# RISC-V simple counter program
-#
-# Stanislav Zhelnio, 2020
-#
-
             .text
 
 start:      mv a0, zero              # t0 = 0

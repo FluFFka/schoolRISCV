@@ -30,6 +30,8 @@
 `define RVOP_XORI   7'b0010011
 `define RVOP_XOR    7'b0110011
 `define RVOP_AUIPC  7'b0010111
+`define RVOP_LW     7'b0000011
+`define RVOP_SW     7'b0100011
 
 // instruction funct3
 `define RVF3_ADDI   3'b000
@@ -43,6 +45,8 @@
 `define RVF3_ANY    3'b???
 `define RVF3_XORI   3'b100
 `define RVF3_XOR    3'b100
+`define RVF3_LW     3'b010
+`define RVF3_SW     3'b010
 
 // instruction funct7
 `define RVF7_ADD    7'b0000000
