@@ -111,8 +111,8 @@ module sm_testbench;
 
     always @ (posedge clk)
     begin
-        $write ("%5d  pc = %2h instr = %h   a0 = %1d", 
-                  cycle, sm_top.sm_cpu.pc, sm_top.sm_cpu.instr, sm_top.sm_cpu.rf.rf[10]);
+        $write ("%5d  pc = %2h instr = %h   a0 = %1d, a1 = %1d",
+                  cycle, sm_top.sm_cpu.pc, sm_top.sm_cpu.instr, sm_top.sm_cpu.rf.rf[10], sm_top.sm_cpu.rf.rf[11]);
 
         disasmInstr();
 
